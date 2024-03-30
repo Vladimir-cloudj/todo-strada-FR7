@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoList</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="main">
+        <div class="container">
+            <div class="tasks-form form">
+                <div class="high-tasks">
+                    <!-- HIGH TASKS -->
+                    <h2 class="high-title title">HIGH</h2>
+                    <form action="#" class="high-tasks__form form-tasks" id="high-tasks__form" method="get">
+                        <input type="text" class="form-tasks__add--high addtask--high" id="form-tasks__add--high" placeholder="Добавить важных дел">
+                        <button class="form-tasks__btn--high btn" type="submit">+</button>
+                    </form>
+                    <div class="high-tasks__list list" id="high-tasks__list">
+                        
+                    </div>
+                </div>
+                <div class="low-tasks">
+                    <!-- LOW TASKS -->
+                    <h2 class="low-title title">LOW</h2> 
+                    <form action="#" class="low-tasks__form form-tasks" id="low-tasks__form" method="get">
+                        <input type="text" class="form-tasks__add--low addtask--low" id="form-tasks__add--low" placeholder="Добавить дел">
+                        <button class="form-tasks__btn--low btn" type="submit">+</button>
+                    </form>
+                    <div class="low-tasks__list list" id="low-tasks__list">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script defer type="module" src="./js/main.mjs"></script>
+</body>
+</html>
