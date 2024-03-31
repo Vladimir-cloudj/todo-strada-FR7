@@ -1,22 +1,5 @@
-import data from './tasks.json' assert {type: "json"}
-
-const UI_ELEMENTS = {
-    HIGH_TASK_FORM: document.querySelector('#high-tasks__form'),
-    LOW_TASK_FORM: document.querySelector('#low-tasks__form'),
-    TASK_INPUT_HIGH: document.querySelector('#form-tasks__add--high'),
-    TASK_INPUT_LOW: document.querySelector('#form-tasks__add--low'),
-    HIGH_TASKS_LIST: document.querySelector('#high-tasks__list'),
-    LOW_TASKS_LIST: document.querySelector('#low-tasks__list'),
-} 
-
-const PRIORITY = {
-    LOW: "Low",
-    HIGH: "High",
-};
-const STATUS = {
-    DONE: "Done",
-    TODO: "To Do",
-}
+import {UI_ELEMENTS, PRIORITY, STATUS, ERRORS} from './constants.js'
+// import {isNameValid} from './utils.js'
 let list = [
     { id: Date.now()-2000, name: 'Посмотреть ютубчик', status: STATUS.TODO, priority: PRIORITY.LOW },
     { id: Date.now()-1000, name: 'Вот вам и супер интересная тема. Вы наверняка заметили что ваши файлы с кодом становятся все объемнее, что хочется вынести некоторые вещи куда-то за пределы основной программы.', status: STATUS.TODO, priority: PRIORITY.HIGH },
@@ -24,16 +7,8 @@ let list = [
     { id: Date.now()+2000, name: 'Начать делать задачу', status: STATUS.DONE, priority: PRIORITY.HIGH },
 ]
 
-const ERRORS = {
-    NAME_OF_TASK_UNCORRECT: 'Имя задачи меньше 3 символов или больше 30 символов',
-    NAME_OF_TASK_NOT_EXIST: "name of task not exist",
-	NAME_OF_TASK_EMPTY: "name is task is empty",
-	NAME_OF_PRIORITY_WRONG: 'name of priority task is wrong',
-	// NAME_OF_STATUS: `status must be ${STATUS.TO_DO}, ${STATUS.IN_PROGRESS}, ${STATUS.DONE}`,
-}
-
 if (localStorage.getItem('list')) {
-    list = JSON.parse(localStorage.getItem('list'));
+	list = JSON.parse(localStorage.getItem('list'));
 	list.forEach((task) => renderTask(task));
 } else {
     list.forEach((task) => renderTask(task));
@@ -44,7 +19,8 @@ function saveToLocalStorage() {
 }
 
 function renderTask(task) {
-    let cssClass, checkedStatus;
+    let cssClass;
+    let checkedStatus;
     if (task.status !== STATUS.DONE) {
         cssClass = 'list-item task';
     } else {
@@ -73,24 +49,30 @@ function addTaskToList(name, priority, status = STATUS.TODO) {
             list.push(newTask);
             saveToLocalStorage();
             renderTask(newTask);
+            // console.log(name);
 }
-
 function deleteTask(event) {
     if (event.target.classList.contains('task-delete__btn')) {
-        const parentNode = event.target.closest('.list-item');
-        const id = Number(parentNode.id);
+        createNumberTask(event);
+        // const parentNode = event.target.closest('.list-item');
+        // const id = Number(parentNode.id);
         const index = list.findIndex(task => task.id === id);
         parentNode.remove();
         list.splice(index, 1);
         saveToLocalStorage();
     }
 }
+function createNumberTask(event) {
+    const parentNode = event.target.closest('.list-item');
+    const id = Number(parentNode.id);
+    return id    
+}
 function doneTask(event) {
     if (event.target.dataset.action === 'done') {
-        const parentNode = event.target.closest('.list-item');
-		const id = Number(parentNode.id);
+        createNumberTask(event);
+        // const parentNode = event.target.closest('.list-item');
+		// const id = Number(parentNode.id);
 		const task = list.find((task) => task.id === id);
-        console.log(task);
         task.status === STATUS.DONE? task.status = STATUS.TODO : task.status = STATUS.DONE;
 		const taskTitle = parentNode.querySelector('.task-text');
 		taskTitle.classList.toggle('task-title--done');
@@ -99,8 +81,8 @@ function doneTask(event) {
         saveToLocalStorage();
     }
 }
-const isNameValid = (name)=> {
-        if (name.length < 3 || name.length > 30) {
+function isNameValid(name) {
+    if (name.length < 3 || name.length > 30) {
         throw new Error(ERRORS.NAME_OF_TASK_UNCORRECT)
     }
 }
@@ -121,9 +103,19 @@ UI_ELEMENTS.HIGH_TASK_FORM.addEventListener('submit', (e) => {
 UI_ELEMENTS.LOW_TASK_FORM.addEventListener('submit', (e) => {
     e.preventDefault();
     const taskName = UI_ELEMENTS.TASK_INPUT_LOW.value;
-    addTaskToList(taskName, PRIORITY.LOW, STATUS.TODO);
-    UI_ELEMENTS.TASK_INPUT_LOW.value = '';
-    UI_ELEMENTS.TASK_INPUT_LOW.focus();
+    try {
+        isNameValid(taskName);
+        addTaskToList(taskName, PRIORITY.LOW, STATUS.TODO);
+        UI_ELEMENTS.TASK_INPUT_LOW.value = '';
+        UI_ELEMENTS.TASK_INPUT_LOW.focus();
+    
+    } catch (error) {
+        UI_ELEMENTS.TASK_INPUT_LOW.focus();
+        alert(error.message);
+    }
+    // addTaskToList(taskName, PRIORITY.LOW, STATUS.TODO);
+    // UI_ELEMENTS.TASK_INPUT_LOW.value = '';
+    // UI_ELEMENTS.TASK_INPUT_LOW.focus();
 })
 UI_ELEMENTS.HIGH_TASKS_LIST.addEventListener('click', deleteTask);
 UI_ELEMENTS.HIGH_TASKS_LIST.addEventListener('click', doneTask);
