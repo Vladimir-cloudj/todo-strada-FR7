@@ -1,5 +1,5 @@
 import {UI_ELEMENTS, PRIORITY, STATUS, ERRORS} from './constants.js'
-
+import {isNameValid} from './utils.js'
 let list = [
     { id: Date.now()-2000, name: 'Посмотреть ютубчик', status: STATUS.TODO, priority: PRIORITY.LOW },
     { id: Date.now()-1000, name: 'Вот вам и супер интересная тема. Вы наверняка заметили что ваши файлы с кодом становятся все объемнее, что хочется вынести некоторые вещи куда-то за пределы основной программы.', status: STATUS.TODO, priority: PRIORITY.HIGH },
@@ -81,11 +81,7 @@ function doneTask(event) {
         saveToLocalStorage();
     }
 }
-function isNameValid(name) {
-    if (name.length < 3 || name.length > 30) {
-        throw new Error(ERRORS.NAME_OF_TASK_UNCORRECT)
-    }
-}
+
 UI_ELEMENTS.HIGH_TASK_FORM.addEventListener('submit', (e) => {
     e.preventDefault();
     const taskName = UI_ELEMENTS.TASK_INPUT_HIGH.value;
