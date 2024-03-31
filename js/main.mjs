@@ -49,29 +49,22 @@ function addTaskToList(name, priority, status = STATUS.TODO) {
             list.push(newTask);
             saveToLocalStorage();
             renderTask(newTask);
-            // console.log(name);
 }
 function deleteTask(event) {
     if (event.target.classList.contains('task-delete__btn')) {
-        createNumberTask(event);
-        // const parentNode = event.target.closest('.list-item');
-        // const id = Number(parentNode.id);
+        const parentNode = event.target.closest('.list-item');
+        const id = Number(parentNode.id);
         const index = list.findIndex(task => task.id === id);
         parentNode.remove();
         list.splice(index, 1);
         saveToLocalStorage();
     }
 }
-function createNumberTask(event) {
-    const parentNode = event.target.closest('.list-item');
-    const id = Number(parentNode.id);
-    return id    
-}
+
 function doneTask(event) {
     if (event.target.dataset.action === 'done') {
-        createNumberTask(event);
-        // const parentNode = event.target.closest('.list-item');
-		// const id = Number(parentNode.id);
+        const parentNode = event.target.closest('.list-item');
+		const id = Number(parentNode.id);
 		const task = list.find((task) => task.id === id);
         task.status === STATUS.DONE? task.status = STATUS.TODO : task.status = STATUS.DONE;
 		const taskTitle = parentNode.querySelector('.task-text');
@@ -87,32 +80,46 @@ function isNameValid(name) {
     }
 }
 
+function toggleTaskProcessing(taskName, priority, taskInputPriorityUI) {
+    try {
+        isNameValid(taskName);
+        addTaskToList(taskName, priority, STATUS.TODO);
+        taskInputPriorityUI = '';
+        // UI_ELEMENTS.TASK_INPUT_HIGH.focus();
+    } catch (error) {
+        // UI_ELEMENTS.TASK_INPUT_HIGH.focus();
+        alert(error.message);
+    }
+}
+
 UI_ELEMENTS.HIGH_TASK_FORM.addEventListener('submit', (e) => {
     e.preventDefault();
     const taskName = UI_ELEMENTS.TASK_INPUT_HIGH.value;
-    try {
-        isNameValid(taskName);
-        addTaskToList(taskName, PRIORITY.HIGH, STATUS.TODO);
-        UI_ELEMENTS.TASK_INPUT_HIGH.value = '';
-        UI_ELEMENTS.TASK_INPUT_HIGH.focus();
-    } catch (error) {
-        UI_ELEMENTS.TASK_INPUT_HIGH.focus();
-        alert(error.message);
-    }
+    toggleTaskProcessing(taskName, PRIORITY.HIGH, UI_ELEMENTS.TASK_INPUT_HIGH.value);
+    // try {
+    //     isNameValid(taskName);
+    //     addTaskToList(taskName, PRIORITY.HIGH, STATUS.TODO);
+    //     UI_ELEMENTS.TASK_INPUT_HIGH.value = '';
+    //     UI_ELEMENTS.TASK_INPUT_HIGH.focus();
+    // } catch (error) {
+    //     UI_ELEMENTS.TASK_INPUT_HIGH.focus();
+    //     alert(error.message);
+    // }
 });
 UI_ELEMENTS.LOW_TASK_FORM.addEventListener('submit', (e) => {
     e.preventDefault();
     const taskName = UI_ELEMENTS.TASK_INPUT_LOW.value;
-    try {
-        isNameValid(taskName);
-        addTaskToList(taskName, PRIORITY.LOW, STATUS.TODO);
-        UI_ELEMENTS.TASK_INPUT_LOW.value = '';
-        UI_ELEMENTS.TASK_INPUT_LOW.focus();
+    toggleTaskProcessing(taskName, PRIORITY.LOW, UI_ELEMENTS.TASK_INPUT_LOW.value);
+    // try {
+    //     isNameValid(taskName);
+    //     addTaskToList(taskName, PRIORITY.LOW, STATUS.TODO);
+    //     UI_ELEMENTS.TASK_INPUT_LOW.value = '';
+    //     UI_ELEMENTS.TASK_INPUT_LOW.focus();
     
-    } catch (error) {
-        UI_ELEMENTS.TASK_INPUT_LOW.focus();
-        alert(error.message);
-    }
+    // } catch (error) {
+    //     UI_ELEMENTS.TASK_INPUT_LOW.focus();
+    //     alert(error.message);
+    // }
     // addTaskToList(taskName, PRIORITY.LOW, STATUS.TODO);
     // UI_ELEMENTS.TASK_INPUT_LOW.value = '';
     // UI_ELEMENTS.TASK_INPUT_LOW.focus();
