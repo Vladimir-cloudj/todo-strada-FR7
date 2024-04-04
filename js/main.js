@@ -39,39 +39,47 @@ function renderTask(task) {
     }
 }
 
+function createTask(name, priority, status) {
+    this.id = Date.now();
+    this.name = name;
+    this.priority = priority; 
+    this.status = status;
+}
+
 function addTaskToList(name, priority, status = STATUS.TODO) {
-            const newTask = {
-                id: Date.now(), 
-                name, 
-                status, 
-                priority
-            };
-            list.push(newTask);
-            saveToLocalStorage();
-            renderTask(newTask);
-            // console.log(name);
+    // const newTask = {
+            //     id: Date.now(), 
+            //     name, 
+            //     status, 
+            //     priority
+            // };
+            // list.push(newTask);
+    const newTask = new createTask(name, priority, status);
+    list.push(newTask);
+    saveToLocalStorage();
+    renderTask(newTask);
 }
 function deleteTask(event) {
     if (event.target.classList.contains('task-delete__btn')) {
-        createNumberTask(event);
-        // const parentNode = event.target.closest('.list-item');
-        // const id = Number(parentNode.id);
+        // createNumberTask(event);
+        const parentNode = event.target.closest('.list-item');
+        const id = Number(parentNode.id);
         const index = list.findIndex(task => task.id === id);
         parentNode.remove();
         list.splice(index, 1);
         saveToLocalStorage();
     }
 }
-function createNumberTask(event) {
-    const parentNode = event.target.closest('.list-item');
-    const id = Number(parentNode.id);
-    return id    
-}
+// function createNumberTask(event) {
+//     const parentNode = event.target.closest('.list-item');
+//     const id = Number(parentNode.id);
+//     return id    
+// }
 function doneTask(event) {
     if (event.target.dataset.action === 'done') {
-        createNumberTask(event);
-        // const parentNode = event.target.closest('.list-item');
-		// const id = Number(parentNode.id);
+        // createNumberTask(event);
+        const parentNode = event.target.closest('.list-item');
+		const id = Number(parentNode.id);
 		const task = list.find((task) => task.id === id);
         task.status === STATUS.DONE? task.status = STATUS.TODO : task.status = STATUS.DONE;
 		const taskTitle = parentNode.querySelector('.task-text');

@@ -34,21 +34,60 @@ function renderTask(task) {
             <button class="task-delete__btn" id="delete-btn">+</button>
         </div>
     `;
+    // const taskHTML = document.createElement('div');
+    // const divElement = document.createElement('div');
+    // divElement.className = cssClass
+    // divElement.id = task.id
+    // ////////create divElemnt////////////////////
+    // const taskHTML = document.createElement('div');
+    // taskHTML.className = cssClass
+    // taskHTML.id = task.id
+        // ////////create inputElemnt////////////////////
+    // let inputElement = document.createElement('input');
+    // inputElement.type = 'checkbox';
+    // inputElement.className = 'task-checkbox';
+    // inputElement.id = 'taskcheckbox2';
+    // inputElement.setAttribute('data-action', 'done');
+    // inputElement.checked = task.status === STATUS.DONE;
+    // ////////create labelforinputElemnt////////////////////
+    // let labelForInputElement = document.createElement('label');
+    // labelForInputElement.className = 'task-text';
+    // labelForInputElement.htmlFor = 'taskcheckbox2';
+    // labelForInputElement.textContent = task.name;
+    // ////////create buttonDelete////////////////////
+    // let buttonDelete = document.createElement('button');
+    // buttonDelete.className = 'task-delete__btn';
+    // buttonDelete.id = 'delete-btn';
+    // buttonDelete.textContent = '+';
+    // console.log(inputElement, labelForInputElement, buttonDelete);
+    // taskHTML.append(inputElement);
+    // taskHTML.append(labelForInputElement); 
+    // taskHTML.append(buttonDelete);
+    // taskHTML.appendChild(divElement)
+
     if (task.id) {
         task.priority === PRIORITY.HIGH? UI_ELEMENTS.HIGH_TASKS_LIST.insertAdjacentHTML('beforeend', taskHTML) : UI_ELEMENTS.LOW_TASKS_LIST.insertAdjacentHTML('beforeend', taskHTML);
     }
 }
 
+function createTask(name, priority, status) {
+    this.id = Date.now();
+    this.name = name;
+    this.priority = priority; 
+    this.status = status;
+}
+
 function addTaskToList(name, priority, status = STATUS.TODO) {
-            const newTask = {
-                id: Date.now(), 
-                name, 
-                status, 
-                priority
-            };
-            list.push(newTask);
-            saveToLocalStorage();
-            renderTask(newTask);
+    const newTask = new createTask(name, priority, status);
+            // const newTask = {
+            //     id: Date.now(), 
+            //     name, 
+            //     status, 
+            //     priority
+            // };
+    list.push(newTask);
+    saveToLocalStorage();
+    renderTask(newTask);
 }
 function deleteTask(event) {
     if (event.target.classList.contains('task-delete__btn')) {
@@ -80,7 +119,7 @@ function isNameValid(name) {
     }
 }
 
-function toggleTaskProcessing(taskName, priority, taskInputPriorityUI) {
+function addTaskProcess(taskName, priority, taskInputPriorityUI) {
     try {
         isNameValid(taskName);
         addTaskToList(taskName, priority, STATUS.TODO);
@@ -95,7 +134,7 @@ function toggleTaskProcessing(taskName, priority, taskInputPriorityUI) {
 UI_ELEMENTS.HIGH_TASK_FORM.addEventListener('submit', (e) => {
     e.preventDefault();
     const taskName = UI_ELEMENTS.TASK_INPUT_HIGH.value;
-    toggleTaskProcessing(taskName, PRIORITY.HIGH, UI_ELEMENTS.TASK_INPUT_HIGH.value);
+    addTaskProcess(taskName, PRIORITY.HIGH, UI_ELEMENTS.TASK_INPUT_HIGH.value);
     // try {
     //     isNameValid(taskName);
     //     addTaskToList(taskName, PRIORITY.HIGH, STATUS.TODO);
@@ -109,7 +148,7 @@ UI_ELEMENTS.HIGH_TASK_FORM.addEventListener('submit', (e) => {
 UI_ELEMENTS.LOW_TASK_FORM.addEventListener('submit', (e) => {
     e.preventDefault();
     const taskName = UI_ELEMENTS.TASK_INPUT_LOW.value;
-    toggleTaskProcessing(taskName, PRIORITY.LOW, UI_ELEMENTS.TASK_INPUT_LOW.value);
+    addTaskProcess(taskName, PRIORITY.LOW, UI_ELEMENTS.TASK_INPUT_LOW.value);
     // try {
     //     isNameValid(taskName);
     //     addTaskToList(taskName, PRIORITY.LOW, STATUS.TODO);
